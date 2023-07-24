@@ -6,11 +6,13 @@ const process = require('node:process')
 async function writeFile(filePath, data, callback) {
   const foldersOnFilePath = path.dirname(filePath)
 
-  fs.mkdir(foldersOnFilePath, { recursive: true }).catch(callback)
-
-  fs.writeFile(filePath, data)
-    .then(() => callback(null))
-    .catch(callback)
+  try {
+    await fs.mkdir(foldersOnFilePath, { recursive: true })
+    await fs.writeFile(filePath, data)
+    return callback(null)
+  } catch (err) {
+    return callback(err)
+  }
 }
 
 // Ejercicio 3
